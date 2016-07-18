@@ -30,6 +30,14 @@ _EOT_
 exit 1
 }
 
+function get_package(){
+  (
+    cd ../
+    url=$(cat linux/url_list.txt | grep "$1")
+    wget "$url"
+  )
+}
+
 while getopts "a:h" option
 do
   case $option in
@@ -50,17 +58,9 @@ architecture="$1"
 
 if [ $a_flag -eq 1 ]; then
   if [ $architecture = "32bit" ]; then
-    url=$(cat ../linux/url_list.txt | grep i686)
-    file_path=$(basename "$url")
-    destination_path="../${file_path}"
-
-    wget -O "$destination_path" "$url"
+    get_package "i686"
   elif [ $architecture = "64bit" ]; then
-    url=$(cat ../linux/url_list.txt | grep x86_64)
-    file_path=$(basename "$url")
-    destination_path="../${file_path}"
-
-    wget -O "$destination_path" "$url"
+    get_package "x86_64"
   fi
 else
   (
