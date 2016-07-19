@@ -53,10 +53,10 @@ do
   esac
 done
 
-shift $((OPTIND - 2))
-architecture="$1"
-
 if [ $a_flag -eq 1 ]; then
+  shift $((OPTIND - 2))
+  architecture="$1"
+
   if [ $architecture = "32bit" ]; then
     get_package "i686"
   elif [ $architecture = "64bit" ]; then
