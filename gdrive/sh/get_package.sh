@@ -31,7 +31,7 @@ exit 1
 function get_package(){
   (
     cd ../
-    url=$(cat linux/url_list.txt | grep "$1" | awk '{print $2}')
+    url=$(grep "$1" -a linux/url_list.txt | awk '{print $2}')
     firefox "$url" &
   )
 }
@@ -55,9 +55,9 @@ if [ $a_flag -eq 1 ]; then
   shift $((OPTIND - 2))
   architecture="$1"
 
-  if [ $architecture = "32bit" ]; then
+  if [ "$architecture" = "32bit" ]; then
     get_package "386"
-  elif [ $architecture = "64bit" ]; then
+  elif [ "$architecture" = "64bit" ]; then
     get_package "x64"
   fi
 fi
