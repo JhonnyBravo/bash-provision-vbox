@@ -33,7 +33,7 @@ exit 1
 function get_package(){
   (
     cd ../
-    url=$(cat debian/url_list.txt | grep "$1")
+    url=$(grep "$1" -a debian/url_list.txt)
     wget "$url"
   )
 }
@@ -57,9 +57,9 @@ if [ $a_flag -eq 1 ]; then
   shift $((OPTIND - 2))
   architecture="$1"
 
-  if [ $architecture = "32bit" ]; then
+  if [ "$architecture" = "32bit" ]; then
     get_package "i686"
-  elif [ $architecture = "64bit" ]; then
+  elif [ "$architecture" = "64bit" ]; then
     get_package "x86_64"
   fi
 else
