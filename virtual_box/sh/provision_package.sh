@@ -1,7 +1,8 @@
 #!/bin/bash
 
 script_name=$(basename "$0")
-package_name="virtualbox"
+dpkg_package="virtualbox"
+apt_package="libsdl1.2debian"
 
 i_flag=0
 u_flag=0
@@ -14,7 +15,7 @@ NAME
   ${script_name} -h
 
 DESCRIPTION
-  ${package_name} をインストール / アンインストールします。
+  ${dpkg_package} ${apt_package} をインストール / アンインストールします。
 
 OPTIONS
   -i architecture
@@ -37,7 +38,8 @@ exit 1
 function install_package(){
   (
     cd ../
-    source_path=$(ls | grep "$1")
+    source_path=$(find . -name "virtualbox-*${1}.deb")
+    apt-get install "$apt_package"
     dpkg -i "$source_path"
     rm "$source_path"
   )
@@ -47,12 +49,13 @@ function uninstall_package(){
   (
     cd ../
     version=$(
-      basename $(cat ubuntu/url_list.txt) \
+      basename "$(cat ubuntu/url_list.txt)" \
         | tr "-" " " \
         | tr "_" " " \
         | awk '{print $2}'
     )
-    dpkg -P "${package_name}-${version}"
+    dpkg -P "${dpkg_package}-${version}"
+    apt-get purge "$apt_package"
   )
 }
 
@@ -78,9 +81,9 @@ if [ $i_flag -eq 1 ]; then
   shift $((OPTIND - 2))
   architecture="$1"
 
-  if [ $architecture = "32bit" ]; then
+  if [ "$architecture" = "32bit" ]; then
     install_package "i386"
-  elif [ $architecture = "64bit" ]; then
+  elif [ "$architecture" = "64bit" ]; then
     install_package "amd64"
   fi
 elif [ $u_flag -eq 1 ]; then
