@@ -38,8 +38,9 @@ exit 1
 function install_package(){
   (
     cd ../
-    source_path=$(ls | grep "$1")
+    source_path=$(find . -name "sublime-text_*${1}.deb")
     dpkg -i "$source_path"
+    # shellcheck disable=SC2086
     apt-get install $apt_package
     rm "$source_path"
   )
@@ -47,6 +48,7 @@ function install_package(){
 
 function uninstall_package(){
   dpkg -P "$dpkg_package"
+  # shellcheck disable=SC2086
   apt-get purge $apt_package
 }
 
@@ -72,9 +74,9 @@ if [ $i_flag -eq 1 ]; then
   shift $((OPTIND - 2))
   architecture="$1"
 
-  if [ $architecture = "32bit" ]; then
+  if [ "$architecture" = "32bit" ]; then
     install_package "i386"
-  elif [ $architecture = "64bit" ]; then
+  elif [ "$architecture" = "64bit" ]; then
     install_package "amd64"
   fi
 elif [ $u_flag -eq 1 ]; then
