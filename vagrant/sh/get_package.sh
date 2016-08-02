@@ -12,8 +12,6 @@ NAME
 
 DESCRIPTION
   ${package_name} をダウンロードします。
-  -a オプションを指定しない場合は、
-  32bit パッケージと 64bit パッケージの両方をダウンロードします。
 
 OPTIONS
   -a architecture
@@ -33,7 +31,7 @@ exit 1
 function get_package(){
   (
     cd ../
-    url=$(grep "$1" -a debian/url_list.txt)
+    url=$(grep "$1" -a debian/url_list.txt | awk '{print $2}')
     wget "$url"
   )
 }
@@ -62,9 +60,4 @@ if [ $a_flag -eq 1 ]; then
   elif [ "$architecture" = "64bit" ]; then
     get_package "x86_64"
   fi
-else
-  (
-    cd ..
-    wget -i debian/url_list.txt
-  )
 fi
