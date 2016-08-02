@@ -49,7 +49,7 @@ function uninstall_package(){
   (
     cd ../
     version=$(
-      basename "$(cat ubuntu/url_list.txt)" \
+      basename "$(cat ubuntu/url_list.txt | awk '{print $2}')" \
         | tr "-" " " \
         | tr "_" " " \
         | awk '{print $2}'
