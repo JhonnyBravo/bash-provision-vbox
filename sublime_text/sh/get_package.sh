@@ -12,8 +12,6 @@ NAME
 
 DESCRIPTION
   ${package_name} と Package Control をダウンロードします。
-  -a オプションを指定しない場合は、
-  32bit パッケージと 64bit パッケージの両方をダウンロードします。
 
 OPTIONS
   -a architecture
@@ -34,6 +32,14 @@ function get_package(){
   (
     cd ../
     url=$(grep "$1" -a ubuntu/url_list.txt | awk '{print $4}')
+    wget "$url"
+  )
+}
+
+function get_package_control(){
+  (
+    cd ../
+    url=$(cat package_control/url_list.txt | awk '{print $3}')
     wget "$url"
   )
 }
@@ -61,13 +67,9 @@ if [ $a_flag -eq 1 ]; then
     get_package "i386"
   elif [ "$architecture" = "64bit" ]; then
     get_package "amd64"
+  else
+    exit 1
   fi
-else
-  get_package "i386"
-  get_package "amd64"
-fi
 
-(
-  cd ..
-  wget -i package_control/url_list.txt
-)
+  get_package_control
+fi
