@@ -2,19 +2,18 @@
 
 script_name=$(basename "$0")
 package_name="gdrive"
-a_flag=0
 
 function usage(){
 cat <<_EOT_
 NAME
-  ${script_name} -a architecture
+  ${script_name} architecture
   ${script_name} -h
 
 DESCRIPTION
   ${package_name} をダウンロードします。
 
 OPTIONS
-  -a architecture
+  architecture
     OS のアーキテクチャに合わせたパッケージをダウンロードします。
 
     有効な値:
@@ -28,20 +27,9 @@ _EOT_
 exit 1
 }
 
-function get_package(){
-  (
-    cd ../
-    url=$(grep "$1" -a linux/url_list.txt | awk '{print $2}')
-    firefox "$url" &
-  )
-}
-
-while getopts "a:h" option
+while getopts "h" option
 do
   case $option in
-    a)
-      a_flag=1
-      ;;
     h)
       usage
       ;;
@@ -51,13 +39,12 @@ do
   esac
 done
 
-if [ $a_flag -eq 1 ]; then
-  shift $((OPTIND - 2))
-  architecture="$1"
+architecture="$1"
 
-  if [ "$architecture" = "32bit" ]; then
-    get_package "386"
-  elif [ "$architecture" = "64bit" ]; then
-    get_package "x64"
-  fi
+if [ "$architecture" = "32bit" ]; then
+  url=$(awk '/386/ {print $2}' < ../linux/url_list.txt)
+  firefox "$url" &
+elif [ "$architecture" = "64bit" ]; then
+  url=$(awk '/x64/ {print $2}' < ../linux/url_list.txt)
+  firefox "$url" &
 fi
