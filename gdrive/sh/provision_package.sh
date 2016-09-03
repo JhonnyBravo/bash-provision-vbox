@@ -36,12 +36,9 @@ exit 1
 }
 
 function install_package(){
-  (
-    cd ~/Downloads
-    source_path=$(find . -name "gdrive-linux-${1}")
-    install "$source_path" "${destination_path}/${package_name}"
-    rm "${source_path}"
-  )
+  source_path=$(find ~/Downloads -name "gdrive-linux-${1}")
+  install "$source_path" "${destination_path}/${package_name}"
+  rm "${source_path}"
 }
 
 function uninstall_package(){
