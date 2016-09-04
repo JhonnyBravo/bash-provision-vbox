@@ -36,15 +36,12 @@ exit 1
 }
 
 function install_package(){
-  (
-    cd ../
-    package_dir=$(find . -name "phantomjs*${1}*" | sed -e "s/.tar.bz2//")
-    tar jxf "${package_dir}.tar.bz2"
-    source_path="${package_dir}/bin/${package_name}"
-    install "$source_path" "$destination_path"
-    rm "${package_dir}.tar.bz2"
-    rm -R "$package_dir"
-  )
+  package_dir=$(find . -name "phantomjs*${1}*" | sed -e "s/.tar.bz2//")
+  tar jxf "${package_dir}.tar.bz2"
+  source_path="${package_dir}/bin/${package_name}"
+  install "$source_path" "$destination_path"
+  rm "${package_dir}.tar.bz2"
+  rm -R "$package_dir"
 }
 
 function uninstall_package(){
