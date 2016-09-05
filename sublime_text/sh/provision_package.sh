@@ -36,14 +36,11 @@ exit 1
 }
 
 function install_package(){
-  (
-    cd ../
-    source_path=$(find . -name "sublime-text_*${1}.deb")
-    dpkg -i "$source_path"
-    # shellcheck disable=SC2086
-    apt-get install $apt_package
-    rm "$source_path"
-  )
+  source_path=$(find . -name "sublime-text_*${1}.deb")
+  dpkg -i "$source_path"
+  # shellcheck disable=SC2086
+  apt-get install $apt_package
+  rm "$source_path"
 }
 
 function uninstall_package(){
