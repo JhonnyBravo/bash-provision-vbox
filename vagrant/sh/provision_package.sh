@@ -35,12 +35,9 @@ exit 1
 }
 
 function install_package(){
-  (
-    cd ../
-    source_path=$(find . -name "vagrant_*${1}.deb")
-    dpkg -i "$source_path"
-    rm "$source_path"
-  )
+  source_path=$(find . -name "vagrant_*${1}.deb")
+  dpkg -i "$source_path"
+  rm "$source_path"
 }
 
 function uninstall_package(){
