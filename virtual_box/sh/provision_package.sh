@@ -36,27 +36,22 @@ exit 1
 }
 
 function install_package(){
-  (
-    cd ../
-    source_path=$(find . -name "virtualbox-*${1}.deb")
-    apt-get install "$apt_package"
-    dpkg -i "$source_path"
-    rm "$source_path"
-  )
+  source_path=$(find . -name "virtualbox-*${1}.deb")
+  apt-get install "$apt_package"
+  dpkg -i "$source_path"
+  rm "$source_path"
 }
 
 function uninstall_package(){
-  (
-    cd ../
-    version=$(
-      basename "$(cat ubuntu/url_list.txt | awk '{print $2}')" \
-        | tr "-" " " \
-        | tr "_" " " \
-        | awk '{print $2}'
-    )
-    dpkg -P "${dpkg_package}-${version}"
-    apt-get purge "$apt_package"
+  version=$(
+    basename "$(awk '{print $2}' < ../ubuntu/url_list.txt)" \
+      | tr "-" " " \
+      | tr "_" " " \
+      | awk '{print $2}'
   )
+
+  dpkg -P "${dpkg_package}-${version}"
+  apt-get purge "$apt_package"
 }
 
 while getopts "i:uh" option
