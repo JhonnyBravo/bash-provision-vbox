@@ -1,8 +1,7 @@
 #!/bin/bash
 
 script_name=$(basename "$0")
-dpkg_package="sublime-text"
-apt_package="ibus-mozc emacs-mozc"
+package_name="vagrant"
 
 i_flag=0
 u_flag=0
@@ -15,7 +14,7 @@ NAME
   ${script_name} -h
 
 DESCRIPTION
-  ${dpkg_package} ${apt_package} をインストール / アンインストールします。
+  ${package_name} をインストール / アンインストールします。
 
 OPTIONS
   -i architecture
@@ -36,17 +35,13 @@ exit 1
 }
 
 function install_package(){
-  source_path=$(find . -name "sublime-text_*${1}.deb")
+  source_path=$(find . -name "vagrant_*${1}.deb")
   dpkg -i "$source_path"
-  # shellcheck disable=SC2086
-  apt-get install $apt_package
   rm "$source_path"
 }
 
 function uninstall_package(){
-  dpkg -P "$dpkg_package"
-  # shellcheck disable=SC2086
-  apt-get purge $apt_package
+  dpkg -P "$package_name"
 }
 
 while getopts "i:uh" option
@@ -72,9 +67,9 @@ if [ $i_flag -eq 1 ]; then
   architecture="$1"
 
   if [ "$architecture" = "32bit" ]; then
-    install_package "i386"
+    install_package "i686"
   elif [ "$architecture" = "64bit" ]; then
-    install_package "amd64"
+    install_package "x86_64"
   fi
 elif [ $u_flag -eq 1 ]; then
   uninstall_package
