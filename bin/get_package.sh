@@ -1,7 +1,7 @@
 #!/bin/bash
 
 script_name=$(basename "$0")
-package_name="sublime-text"
+package_name="vagrant"
 
 function usage(){
 cat <<_EOT_
@@ -46,14 +46,11 @@ architecture="$1"
 file_name="$2"
 
 if [ "$architecture" = "32bit" ]; then
-  url=$(awk '/i386/ {print $4}' < "$file_name")
+  url=$(awk '/i686/ {print $2}' < "$file_name")
   wget "$url"
 elif [ "$architecture" = "64bit" ]; then
-  url=$(awk '/amd64/ {print $4}' < "$file_name")
+  url=$(awk '/x86_64/ {print $2}' < "$file_name")
   wget "$url"
 else
   exit 2
 fi
-
-url=$(awk '/packagecontrol/ {print $3}' < "$file_name")
-wget "$url"
