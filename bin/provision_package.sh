@@ -1,7 +1,8 @@
 #!/bin/bash
 
 script_name=$(basename "$0")
-package_name="vagrant"
+dpkg_package="virtualbox"
+apt_package="libsdl1.2debian"
 
 i_flag=0
 u_flag=0
@@ -10,11 +11,11 @@ function usage(){
 cat <<_EOT_
 NAME
   ${script_name} -i architecture
-  ${script_name} -u
+  ${script_name} -u file_name
   ${script_name} -h
 
 DESCRIPTION
-  ${package_name} をインストール / アンインストールします。
+  ${dpkg_package} と ${apt_package} をインストール / アンインストールします。
 
 OPTIONS
   -i architecture
@@ -25,7 +26,7 @@ OPTIONS
     * 32bit
     * 64bit
 
-  -u
+  -u file_name
     パッケージをアンインストールします。
 
   -h
@@ -35,16 +36,25 @@ exit 1
 }
 
 function install_package(){
-  source_path=$(find . -name "vagrant_*${1}.deb")
+  source_path=$(find . -name "virtualbox-*${1}.deb")
+  apt-get install "$apt_package"
   dpkg -i "$source_path"
   rm "$source_path"
 }
 
 function uninstall_package(){
-  dpkg -P "$package_name"
+  version=$(
+    basename $(awk '{print $2}' < "$1") \
+      | tr "-" " " \
+      | tr "_" " " \
+      | awk '{print $2}'
+  )
+
+  dpkg -P "${dpkg_package}-${version}"
+  apt-get purge "$apt_package"
 }
 
-while getopts "i:uh" option
+while getopts "i:u:h" option
 do
   case $option in
     i)
@@ -67,10 +77,12 @@ if [ $i_flag -eq 1 ]; then
   architecture="$1"
 
   if [ "$architecture" = "32bit" ]; then
-    install_package "i686"
+    install_package "i386"
   elif [ "$architecture" = "64bit" ]; then
-    install_package "x86_64"
+    install_package "amd64"
   fi
 elif [ $u_flag -eq 1 ]; then
-  uninstall_package
+  shift $((OPTIND - 2))
+  file_name="$1"
+  uninstall_package "$file_name"
 fi
