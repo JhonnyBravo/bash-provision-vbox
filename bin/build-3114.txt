@@ -1,3 +1,0 @@
-Ubuntu 64 bit https://download.sublimetext.com/sublime-text_build-3114_amd64.deb
-Ubuntu 32 bit https://download.sublimetext.com/sublime-text_build-3114_i386.deb
-Package Control.sublime-package https://packagecontrol.io/Package%20Control.sublime-package
